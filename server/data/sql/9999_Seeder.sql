@@ -24,7 +24,7 @@ FROM generate_series(
       OR (m.m IN (1, 3, 5, 7, 8, 10, 12) AND d.d <= 31)
     )
 ORDER BY
-  y.y, m.m, d.d
+  y.y, m.m, d.d;
 
 
 /* Insert Default Enumeratsions and Settings */
@@ -40,7 +40,7 @@ INSERT INTO "_Status" (value)
 
 INSERT INTO "_Settings" (active) VALUES (true);
 
-INSERT INTO "_Points" (value) SELECT fib(400);
+INSERT INTO "_Point" (value) SELECT fib(400);
 
 
 /* Pre-Defined Data */
@@ -52,9 +52,9 @@ VALUES
   ('2017-11-10 00:00:00', '2017-11-10 23:59:59', 'Veterans Day'),
   ('2017-11-23 00:00:00', '2017-11-23 23:59:59', 'Thanksgiving Day'),
   ('2017-12-25 00:00:00', '2017-12-25 23:59:59', 'Christmas Day'),
-  ('2018-01-01 00:00:00', '2018-01-01 23:59:59', 'New Year\'s Day'),
+  ('2018-01-01 00:00:00', '2018-01-01 23:59:59', 'New Years Day'),
   ('2018-01-15 00:00:00', '2018-01-15 23:59:59', 'Martin Luther King, Jr.'),
-  ('2018-02-19 00:00:00', '2018-02-19 23:59:59', 'President\'s Day'),
+  ('2018-02-19 00:00:00', '2018-02-19 23:59:59', 'Presidents Day'),
   ('2018-03-28 00:00:00', '2018-03-28 23:59:59', 'Memorial Day'),
   ('2018-07-04 00:00:00', '2018-07-04 23:59:59', 'Independence Day'),
   ('2018-09-03 00:00:00', '2018-09-03 23:59:59', 'Labor Day'),
@@ -69,7 +69,7 @@ VALUES
 INSERT INTO "People"
   (firstname, lastname, email, phone, avatar)
 VALUES
-  ('Joshua', 'Miller', 'joshuamil@gmail.com', '7046517472', 'https://avatars3.githubusercontent.com/u/1080695?v=4&s=400')
+  ('Joshua', 'Miller', 'joshuamil@gmail.com', '7046517472', 'https://avatars3.githubusercontent.com/u/1080695?v=4&s=400');
 
 
 /* Creates a default Project that runs for 15 Sprints */
@@ -247,7 +247,7 @@ INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'miles
 INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'moodid', moodid, 'created', 'Record created by seeder', 1 FROM "_Mood";
 INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'personid', personid, 'created', 'Record created by seeder', 1 FROM "People";
 INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'phaseid', phaseid, 'created', 'Record created by seeder', 1 FROM "Phase";
-INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'pointid', pointid, 'created', 'Record created by seeder', 1 FROM "_Points";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'pointid', pointid, 'created', 'Record created by seeder', 1 FROM "_Point";
 INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'priorityid', priorityid, 'created', 'Record created by seeder', 1 FROM "Priority";
 INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'projectid', projectid, 'created', 'Record created by seeder', 1 FROM "Project";
 INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'resourceid', resourceid, 'created', 'Record created by seeder', 1 FROM "Resource";
