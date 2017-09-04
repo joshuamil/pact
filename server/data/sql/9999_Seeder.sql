@@ -91,15 +91,14 @@ INSERT INTO "Phase"
 SELECT
   PR.projectid, N.num, 'Phase ' || N.num, 'Default goals for Phase ' || N.num
 FROM "Project" PR
-  INNER JOIN "_Number" N ON
-    N.num <= 5
+  INNER JOIN "_Number" N ON N.num <= 5
 WHERE PR.name = 'PACT'
 ORDER BY projectid ASC;
 
 
 /* Creates 5 Milestones in the default Project */
 INSERT INTO "Milestone"
-(projectid, name, description, scheduledate)
+  (projectid, name, description, scheduledate)
 SELECT
   PR.projectid,
   'Milestone ' || N.num,
@@ -113,7 +112,7 @@ WHERE PR.name = 'PACT';
 
 /* Creates 3 Sprints for each Phase in the default Project */
 INSERT INTO "Sprint"
-(projectid, phaseid, sprint, startdate, enddate, goals)
+  (projectid, phaseid, sprint, startdate, enddate, goals)
 SELECT
   PR.projectid,
   PH.phaseid,
@@ -122,18 +121,17 @@ SELECT
   CURRENT_DATE + (((S.sprintweeks*(row_number() OVER ()-1)+2)*7)-1 || ' day')::interval AS enddate,
   'Goals for Sprint ' || row_number() OVER() as goals
 FROM "Project" PR
-  INNER JOIN "Phase" PH ON
-    PR.projectid = PH.projectid
+  INNER JOIN "Phase" PH ON PR.projectid = PH.projectid
   INNER JOIN "_Settings" S ON 1=1
-  INNER JOIN "_Number" N ON
-    N.num <= 3
+  INNER JOIN "_Number" N ON N.num <= 3
 WHERE PR.name = 'PACT';
 
 
 /* Insert Team Mebers */
 INSERT INTO "Team"
-(projectid, name, description)
-SELECT PR.projectid, 'Development', 'Programming team for the ' || PR.name || ' project'
+  (projectid, name, description)
+SELECT
+  PR.projectid, 'Development', 'Programming team for the ' || PR.name || ' project'
 FROM "Project" PR
 WHERE PR.name = 'PACT'
 LIMIT 1;
@@ -141,7 +139,7 @@ LIMIT 1;
 
 /* Insert Team Allocation */
 INSERT INTO "Allocation"
-(teamid, personid, teamlead, startdate, enddate)
+  (teamid, personid, teamlead, startdate, enddate)
 SELECT
   T.teamid,
   P.personid,
@@ -181,3 +179,86 @@ FROM "Project" PR
   INNER JOIN "words" W ON W.num = N.num
   INNER JOIN POINT ON N.num = POINT.row
 WHERE PR.name = 'PACT';
+
+/* Insert Task Status */
+INSERT INTO "Status"
+  (taskid, status)
+SELECT
+  T.taskid, S.statusid
+FROM "Task" T
+  INNER JOIN "_Status" S ON 1=1 AND S.value = 'Pending';
+
+
+/* Insert Task Severity */
+INSERT INTO "Severity"
+  (taskid, severity)
+SELECT
+  T.taskid, S.severityid
+FROM "Task" T
+  INNER JOIN "_Severity" S ON 1=1 AND S.value = 'Medium';
+
+
+/* Insert Task Priority */
+INSERT INTO "Priority"
+  (taskid, priority)
+SELECT
+  T.taskid, 1
+FROM "Task" T;
+
+
+/* Insert Task Assignment */
+INSERT INTO "Assignment"
+  (taskid, personid, teamid)
+SELECT
+  T.taskid,
+  P.personid,
+  TE.teamid
+FROM "Task" T
+  INNER JOIN "People" P ON 1=1
+  INNER JOIN "Allocation" A ON P.personid = A.personid
+  INNER JOIN "Team" TE ON A.teamid = TE.teamid;
+
+
+/* Insert default schedule */
+INSERT INTO "Schedule"
+  (taskid, sprintid)
+SELECT
+  T.taskid,
+  CAST(Ceil((row_number() OVER() / 2) + 1) AS INT)
+FROM "Project" PR
+  INNER JOIN "Task" T ON
+    PR.projectid = T.projectid
+  INNER JOIN "Sprint" S ON
+    PR.projectid = S.projectid
+    AND T.taskid = S.sprintid
+WHERE PR.name = 'PACT';
+
+
+/* Insert Event Records
+ * Note that this block can be re-generated using /server/data/sql/_Generate_Events.sql
+ */
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'allocationid', allocationid, 'created', 'Record created by seeder', 1 FROM "Allocation";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'assignmentid', assignmentid, 'created', 'Record created by seeder', 1 FROM "Assignment";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'commentid', commentid, 'created', 'Record created by seeder', 1 FROM "Comment";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'debtid', debtid, 'created', 'Record created by seeder', 1 FROM "Debt";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'healthid', healthid, 'created', 'Record created by seeder', 1 FROM "Health";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'holidayid', holidayid, 'created', 'Record created by seeder', 1 FROM "Holiday";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'milestoneid', milestoneid, 'created', 'Record created by seeder', 1 FROM "Milestone";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'moodid', moodid, 'created', 'Record created by seeder', 1 FROM "_Mood";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'personid', personid, 'created', 'Record created by seeder', 1 FROM "People";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'phaseid', phaseid, 'created', 'Record created by seeder', 1 FROM "Phase";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'pointid', pointid, 'created', 'Record created by seeder', 1 FROM "_Points";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'priorityid', priorityid, 'created', 'Record created by seeder', 1 FROM "Priority";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'projectid', projectid, 'created', 'Record created by seeder', 1 FROM "Project";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'resourceid', resourceid, 'created', 'Record created by seeder', 1 FROM "Resource";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'retrospectiveid', retrospectiveid, 'created', 'Record created by seeder', 1 FROM "Retrospective";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'riskid', riskid, 'created', 'Record created by seeder', 1 FROM "Risk";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'scheduleid', scheduleid, 'created', 'Record created by seeder', 1 FROM "Schedule";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'settingsid', settingsid, 'created', 'Record created by seeder', 1 FROM "_Settings";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'severityid', severityid, 'created', 'Record created by seeder', 1 FROM "Severity";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'severityid', severityid, 'created', 'Record created by seeder', 1 FROM "_Severity";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'sprintid', sprintid, 'created', 'Record created by seeder', 1 FROM "Sprint";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'statusid', statusid, 'created', 'Record created by seeder', 1 FROM "Status";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'statusid', statusid, 'created', 'Record created by seeder', 1 FROM "_Status";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'taskid', taskid, 'created', 'Record created by seeder', 1 FROM "Task";
+INSERT INTO "Event" (keyname, keyvalue, action, details, personid) SELECT 'teamid', teamid, 'created', 'Record created by seeder', 1 FROM "Team";

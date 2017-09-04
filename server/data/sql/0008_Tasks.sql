@@ -12,50 +12,6 @@ CREATE INDEX IF NOT EXISTS idx_task_project ON "Task" (projectid);
 CREATE INDEX IF NOT EXISTS idx_task_active ON "Task" (taskid) WHERE deleted IS FALSE;
 
 
-CREATE TABLE IF NOT EXISTS "Schedule" (
-  scheduleid serial PRIMARY KEY NOT NULL,
-  taskid int NOT NULL REFERENCES "Task",
-  sprintid int NOT NULL REFERENCES "Sprint",
-  deleted boolean DEFAULT false
-);
-CREATE INDEX IF NOT EXISTS idx_schedule_task ON "Schedule" (taskid);
-CREATE INDEX IF NOT EXISTS idx_schedule_sprint ON "Schedule" (sprintid);
-CREATE INDEX IF NOT EXISTS idx_task_active ON "Schedule" (scheduleid) WHERE deleted IS FALSE;
-
-
-CREATE TABLE IF NOT EXISTS "Resource" (
-  resourceid serial PRIMARY KEY NOT NULL,
-  taskid int NOT NULL REFERENCES "Task",
-  resource varchar,
-  deleted boolean DEFAULT false
-);
-CREATE INDEX IF NOT EXISTS idx_resource_task ON "Resource" (taskid);
-CREATE INDEX IF NOT EXISTS idx_resource_active ON "Resource" (resourceid) WHERE deleted IS FALSE;
-
-
-CREATE TABLE IF NOT EXISTS "Comment" (
-  commentid serial PRIMARY KEY NOT NULL,
-  taskid int NOT NULL REFERENCES "Task",
-  comment varchar,
-  deleted boolean DEFAULT false
-);
-CREATE INDEX IF NOT EXISTS idx_comment_task ON "Comment" (taskid);
-CREATE INDEX IF NOT EXISTS idx_comment_active ON "Comment" (commentid) WHERE deleted IS FALSE;
-
-
-CREATE TABLE IF NOT EXISTS "Assignment" (
-  assignmentid serial PRIMARY KEY NOT NULL,
-  taskid int NOT NULL REFERENCES "Task",
-  personid int REFERENCES "People",
-  teamid int NOT NULL REFERENCES "Team",
-  deleted boolean DEFAULT false
-);
-CREATE INDEX IF NOT EXISTS idx_assignment_task ON "Assignment" (taskid);
-CREATE INDEX IF NOT EXISTS idx_assignment_person ON "Assignment" (personid);
-CREATE INDEX IF NOT EXISTS idx_assignment_team ON "Assignment" (teamid);
-CREATE INDEX IF NOT EXISTS idx_assignment_active ON "Assignment" (assignmentid) WHERE deleted IS FALSE;
-
-
 CREATE TABLE IF NOT EXISTS "Status" (
   statusid serial PRIMARY KEY NOT NULL,
   taskid int NOT NULL REFERENCES "Task",
@@ -87,3 +43,24 @@ CREATE TABLE IF NOT EXISTS "Priority" (
 CREATE INDEX IF NOT EXISTS idx_priority_task ON "Priority" (taskid);
 CREATE INDEX IF NOT EXISTS idx_priority_priority ON "Priority" (priority);
 CREATE INDEX IF NOT EXISTS idx_priority_active ON "Priority" (priorityid) WHERE deleted IS FALSE;
+
+
+CREATE TABLE IF NOT EXISTS "Resource" (
+  resourceid serial PRIMARY KEY NOT NULL,
+  taskid int NOT NULL REFERENCES "Task",
+  resource varchar,
+  description varchar,
+  deleted boolean DEFAULT false
+);
+CREATE INDEX IF NOT EXISTS idx_resource_task ON "Resource" (taskid);
+CREATE INDEX IF NOT EXISTS idx_resource_active ON "Resource" (resourceid) WHERE deleted IS FALSE;
+
+
+CREATE TABLE IF NOT EXISTS "Comment" (
+  commentid serial PRIMARY KEY NOT NULL,
+  taskid int NOT NULL REFERENCES "Task",
+  comment varchar,
+  deleted boolean DEFAULT false
+);
+CREATE INDEX IF NOT EXISTS idx_comment_task ON "Comment" (taskid);
+CREATE INDEX IF NOT EXISTS idx_comment_active ON "Comment" (commentid) WHERE deleted IS FALSE;
