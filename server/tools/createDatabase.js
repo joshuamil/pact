@@ -8,7 +8,7 @@ if (!process.env.hasOwnProperty('DB_URL')) {
 }
 
 const client = new pg.Client(process.env.DB_URL);
-const dirSql = path.join(__dirname + '/../data/sql/');
+const dirSql = path.join(__dirname + '/sql/');
 let statement = '';
 
 client.connect((err) => {

@@ -4,8 +4,11 @@
   "description": "PACT System",
   "main": "index.js",
   "scripts": {
+    "build:live": "nodemon --inspect --exec ./node_modules/.bin/ts-node -- ./server/index.ts",
+    "clean:server": "rm -rf ./server/**/*.js ./server/**/v1/*.js",
     "create:db": "node server/tools/createDatabase.js",
     "docker:pg": "docker run -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_DB=pact library/postgres",
+    "start": "npm run build:live",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Joshua Miller <joshuamil@gmail.com> (http://jo5h.com/)",
@@ -13,5 +16,22 @@
   "repository": "https://github.com/joshuamil/pact.git",
   "devDependencies": {
     "pg": "^7.3.0"
+  },
+  "dependencies": {
+    "@types/express": "^4.0.37",
+    "@types/lodash": "^4.14.74",
+    "@types/node": "^8.0.26",
+    "@types/pg": "^6.1.43",
+    "body-parser": "^1.17.2",
+    "colors": "^1.1.2",
+    "eslint": "^4.6.1",
+    "express": "^4.15.4",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "morgan": "^1.8.2",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.8.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.2"
   }
 }

@@ -1,0 +1,10 @@
+[
+  {
+    "group": "configuration",
+    "version": "v1",
+    "path": "/Project",
+    "model": "Project",
+    "controller": "Project",
+    "name": "Project"
+  }
+]

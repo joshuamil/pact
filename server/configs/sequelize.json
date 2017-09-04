@@ -1,0 +1,47 @@
+{
+  "local": {
+    "uri": "postgres://admin:@localhost:5432/pact",
+    "options": {
+      "pool": {
+        "max": 5,
+        "min": 0,
+        "idle": 10000
+      }
+    }
+  },
+
+  "development": {
+    "use_env_variable": "DB_URL",
+    "options": {
+      "pool": {
+        "max": 5,
+        "min": 0,
+        "idle": 10000
+      }
+    }
+  },
+
+  "test": {
+    "use_env_variable": "DB_URL",
+    "options": {
+      "pool": {
+        "max": 5,
+        "min": 0,
+        "idle": 10000
+      },
+      "logging": false
+    }
+  },
+
+  "production": {
+    "use_env_variable": "DB_URL",
+    "options": {
+      "pool": {
+        "max": 5,
+        "min": 0,
+        "idle": 10000
+      },
+      "logging": false
+    }
+  }
+}
