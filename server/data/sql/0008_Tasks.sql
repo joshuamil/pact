@@ -1,4 +1,4 @@
-CREATE TABLE "Task" (
+CREATE TABLE IF NOT EXISTS "Task" (
   taskid serial PRIMARY KEY NOT NULL,
   projectid int NOT NULL REFERENCES "Project",
   identifier varchar NOT NULL,
@@ -8,79 +8,82 @@ CREATE TABLE "Task" (
   notes varchar,
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_task_project ON "Task" (projectid);
-CREATE INDEX idx_task_active ON "Task" (taskid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_task_project ON "Task" (projectid);
+CREATE INDEX IF NOT EXISTS idx_task_active ON "Task" (taskid) WHERE deleted IS FALSE;
 
 
-CREATE TABLE "Schedule" (
+CREATE TABLE IF NOT EXISTS "Schedule" (
   scheduleid serial PRIMARY KEY NOT NULL,
   taskid int NOT NULL REFERENCES "Task",
   sprintid int NOT NULL REFERENCES "Sprint",
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_schedule_task ON "Schedule" (taskid);
-CREATE INDEX idx_schedule_sprint ON "Schedule" (sprintid);
-CREATE INDEX idx_task_active ON "Schedule" (scheduleid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_schedule_task ON "Schedule" (taskid);
+CREATE INDEX IF NOT EXISTS idx_schedule_sprint ON "Schedule" (sprintid);
+CREATE INDEX IF NOT EXISTS idx_task_active ON "Schedule" (scheduleid) WHERE deleted IS FALSE;
 
 
-CREATE TABLE "Resource" (
+CREATE TABLE IF NOT EXISTS "Resource" (
   resourceid serial PRIMARY KEY NOT NULL,
   taskid int NOT NULL REFERENCES "Task",
   resource varchar,
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_resource_task ON "Task" (taskid);
-CREATE INDEX idx_resource_active ON "Resource" (resourceid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_resource_task ON "Resource" (taskid);
+CREATE INDEX IF NOT EXISTS idx_resource_active ON "Resource" (resourceid) WHERE deleted IS FALSE;
 
 
-CREATE TABLE "Comment" (
+CREATE TABLE IF NOT EXISTS "Comment" (
   commentid serial PRIMARY KEY NOT NULL,
   taskid int NOT NULL REFERENCES "Task",
   comment varchar,
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_comment_task ON "Task" (taskid);
-CREATE INDEX idx_comment_active ON "Comment" (commentid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_comment_task ON "Comment" (taskid);
+CREATE INDEX IF NOT EXISTS idx_comment_active ON "Comment" (commentid) WHERE deleted IS FALSE;
 
 
-CREATE TABLE "Assignment" (
+CREATE TABLE IF NOT EXISTS "Assignment" (
   assignmentid serial PRIMARY KEY NOT NULL,
   taskid int NOT NULL REFERENCES "Task",
   personid int REFERENCES "People",
   teamid int NOT NULL REFERENCES "Team",
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_assignment_task ON "Task" (taskid);
-CREATE INDEX idx_assignment_person ON "Task" (personid);
-CREATE INDEX idx_assignment_team ON "Task" (teamid);
-CREATE INDEX idx_assignment_active ON "Assignment" (assignmentid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_assignment_task ON "Assignment" (taskid);
+CREATE INDEX IF NOT EXISTS idx_assignment_person ON "Assignment" (personid);
+CREATE INDEX IF NOT EXISTS idx_assignment_team ON "Assignment" (teamid);
+CREATE INDEX IF NOT EXISTS idx_assignment_active ON "Assignment" (assignmentid) WHERE deleted IS FALSE;
 
 
-CREATE TABLE "Status" (
+CREATE TABLE IF NOT EXISTS "Status" (
   statusid serial PRIMARY KEY NOT NULL,
   taskid int NOT NULL REFERENCES "Task",
-  status varchar,
+  status int NOT NULL REFERENCES "_Status" (statusid),
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_status_task ON "Task" (taskid);
-CREATE INDEX idx_status_active ON "Status" (statusid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_status_task ON "Status" (status);
+CREATE INDEX IF NOT EXISTS idx_status_status ON "Status" (status);
+CREATE INDEX IF NOT EXISTS idx_status_active ON "Status" (statusid) WHERE deleted IS FALSE;
 
 
-CREATE TABLE "Severity" (
+CREATE TABLE IF NOT EXISTS "Severity" (
   severityid serial PRIMARY KEY NOT NULL,
   taskid int NOT NULL REFERENCES "Task",
-  severity varchar,
+  severity int NOT NULL REFERENCES "_Severity" (severityid),
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_severity_task ON "Task" (taskid);
-CREATE INDEX idx_severity_active ON "Severity" (severityid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_severity_task ON "Severity" (taskid);
+CREATE INDEX IF NOT EXISTS idx_severity_severity ON "Severity" (severity);
+CREATE INDEX IF NOT EXISTS idx_severity_active ON "Severity" (severityid) WHERE deleted IS FALSE;
 
 
-CREATE TABLE "Priority" (
+CREATE TABLE IF NOT EXISTS "Priority" (
   priorityid serial PRIMARY KEY NOT NULL,
   taskid int NOT NULL REFERENCES "Task",
-  priority int,
+  priority int NOT NULL DEFAULT 0,
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_priority_task ON "Task" (taskid);
-CREATE INDEX idx_priority_active ON "Priority" (priorityid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_priority_task ON "Priority" (taskid);
+CREATE INDEX IF NOT EXISTS idx_priority_priority ON "Priority" (priority);
+CREATE INDEX IF NOT EXISTS idx_priority_active ON "Priority" (priorityid) WHERE deleted IS FALSE;

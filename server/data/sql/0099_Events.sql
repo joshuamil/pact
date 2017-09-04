@@ -1,4 +1,4 @@
-CREATE TABLE "Event" (
+CREATE TABLE IF NOT EXISTS "Event" (
   eventid serial PRIMARY KEY NOT NULL,
   keyname varchar NOT NULL,
   keyvalue int NOT NULL,
@@ -8,6 +8,6 @@ CREATE TABLE "Event" (
   occurred timestamp DEFAULT now(),
   deleted boolean DEFAULT false
 );
-CREATE INDEX idx_event_key ON "Event" (keyname, keyvalue);
-CREATE INDEX idx_event_person ON "Event" (personid);
-CREATE INDEX idx_event_active ON "Event" (eventid) WHERE deleted IS FALSE;
+CREATE INDEX IF NOT EXISTS idx_event_key ON "Event" (keyname, keyvalue);
+CREATE INDEX IF NOT EXISTS idx_event_person ON "Event" (personid);
+CREATE INDEX IF NOT EXISTS idx_event_active ON "Event" (eventid) WHERE deleted IS FALSE;

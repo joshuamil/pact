@@ -4,8 +4,14 @@
   "description": "PACT System",
   "main": "index.js",
   "scripts": {
+    "create:db": "node server/tools/createDatabase.js",
+    "docker:pg": "docker run -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_DB=pact library/postgres",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Joshua Miller <joshuamil@gmail.com> (http://jo5h.com/)",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": "https://github.com/joshuamil/pact.git",
+  "devDependencies": {
+    "pg": "^7.3.0"
+  }
 }
